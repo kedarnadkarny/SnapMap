@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ContactsActivity extends AppCompatActivity {
 
@@ -48,8 +50,6 @@ public class ContactsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        loadContact();
-
         listView = (ListView) findViewById(R.id.listView);
 
         String user_id = mAuth.getCurrentUser().getUid();
@@ -66,6 +66,10 @@ public class ContactsActivity extends AppCompatActivity {
                     initializeContacts();
                     status.child("contactsinitialized").setValue("yes");
                 }
+                else {
+                    //loadContact();
+                    getFirebaseContacts();
+                }
             }
 
             @Override
@@ -74,6 +78,15 @@ public class ContactsActivity extends AppCompatActivity {
             }
         });
 
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refreshContacts();
+            }
+        });
+    }
+
+    private void loadListView() {
         //Create Array Adapter and pass ArrayOfVales to it
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, namearray);
 
@@ -85,17 +98,65 @@ public class ContactsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String phone = phonearray[i];
-                //Toast.makeText(ContactsActivity.this, phone, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ContactsActivity.this, ContactSingleActivity.class);
                 intent.putExtra("phone", phone);
                 startActivity(intent);
             }
         });
+    }
 
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
+    // Get phone contacts from Firebase
+    private void getFirebaseContacts() {
+        contacts = new HashMap<String, String>();
+        String user_id = mAuth.getCurrentUser().getUid();
+
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference rf = rootRef.child("Users").child(user_id).child("friends");
+        rf.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                refreshContacts();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snap: dataSnapshot.getChildren()) {
+                    String user_id = snap.getKey();
+                    String name = ((Map.Entry)((java.util.HashMap)snap.getValue()).entrySet().toArray()[1]).getValue().toString();
+                    final String phone =((Map.Entry)((java.util.HashMap)snap.getValue()).entrySet().toArray()[0]).getValue().toString();
+                    contacts.put(name, phone);
+                    loopy(phone);
+                }
+                //Sort ordering of Map
+                Map<String, String> oContacts = new TreeMap<String, String>(contacts);
+
+                for(Map.Entry<String, String> entry:oContacts.entrySet()) {
+                    if(entry.getKey()!=null) {
+                        namecsv += entry.getKey() + ",";
+                        phonecsv += entry.getValue() + ",";
+                    }
+                }
+                //Convert csvString into array
+                namearray = namecsv.split(",");
+                phonearray = phonecsv.split(",");
+                loadListView();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loopy(final String phone) {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference rm = rootRef.child("Users");
+        com.google.firebase.database.Query query = rm.orderByChild("phone").equalTo(phone);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.v("username", phone + " " + String.valueOf(dataSnapshot.getChildren()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -125,6 +186,7 @@ public class ContactsActivity extends AppCompatActivity {
         //Convert csvString into array
         namearray = namecsv.split(",");
         phonearray = phonecsv.split(",");
+        loadListView();
     }
 
     // To update phone contacts on Firebase
@@ -167,6 +229,7 @@ public class ContactsActivity extends AppCompatActivity {
         //Convert csvString into array
         namearray = namecsv.split(",");
         phonearray = phonecsv.split(",");
+        loadContact();
     }
 
     // To push Phone contacts to Firebase
@@ -178,7 +241,10 @@ public class ContactsActivity extends AppCompatActivity {
             String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             //Read Contact Number
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            contacts.put(name,phoneNumber);
+            String regex = "[^0-9^+]";
+            String output = phoneNumber.replaceAll(regex, "");
+            contacts.put(name, output);
+
         }
         phones.close();
 
@@ -205,5 +271,6 @@ public class ContactsActivity extends AppCompatActivity {
         //Convert csvString into array
         namearray = namecsv.split(",");
         phonearray = phonecsv.split(",");
+        loadListView();
     }
 }

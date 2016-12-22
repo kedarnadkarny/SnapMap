@@ -3,6 +3,7 @@ package main.snapmap;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -51,7 +52,7 @@ public class ContactSingleActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 receiverID[0] = (String) ((Map.Entry)((java.util.HashMap)dataSnapshot.getValue()).entrySet().toArray()[0]).getKey();
                 s.setReceiverID((String) ((Map.Entry)((java.util.HashMap)dataSnapshot.getValue()).entrySet().toArray()[0]).getKey());
-                Toast.makeText(ContactSingleActivity.this, "ReceiverID: "+ s.getReceiverID(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ContactSingleActivity.this, "ReceiverID: "+ s.getReceiverID() + " Phone: "+phone, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -64,12 +65,16 @@ public class ContactSingleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference rf = rootRef.child("Users").child(user_id);
+                DatabaseReference rf = rootRef.child("Users").child(user_id).child("friends");
                 com.google.firebase.database.Query query = rf.orderByChild("phone").equalTo(phone);
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Toast.makeText(ContactSingleActivity.this, dataSnapshot.child("country").getValue(String.class), Toast.LENGTH_SHORT).show();
+                        for(DataSnapshot snap: dataSnapshot.getChildren()) {
+                            DatabaseReference friend = mDatabase.child("Users").child(user_id).child("friends").child(snap.getKey());
+                            friend.child("locationaccess").setValue("yes");
+                            Toast.makeText(ContactSingleActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -77,20 +82,6 @@ public class ContactSingleActivity extends AppCompatActivity {
 
                     }
                 });
-
-                /*DatabaseReference current_user_db = mDatabase.child(user_id).child("friends");
-                com.google.firebase.database.Query query = current_user_db.orderByChild("phone").equalTo(phone);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        dataSnapshot.getChildren();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });*/
             }
         });
 

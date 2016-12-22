@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etName, etEmail, etPassword;
     Button btnRegister, btnLogin;
     private ProgressDialog mProgress;
+    private EditText etCC, etPhone;
     SnapMap s;
 
     @Override
@@ -35,6 +37,9 @@ public class RegisterActivity extends AppCompatActivity {
         etName = (EditText) findViewById(R.id.etName);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
+        etCC = (EditText) findViewById(R.id.etCC);
+        etPhone = (EditText) findViewById(R.id.etPhone);
+
         btnRegister = (Button) findViewById(R.id.btnRegister);
         btnLogin = (Button) findViewById(R.id.btnLogin);
 
@@ -80,6 +85,9 @@ public class RegisterActivity extends AppCompatActivity {
                         String user_id = mAuth.getCurrentUser().getUid();
                         DatabaseReference current_user_db = mDatabase.child(user_id);
                         current_user_db.child("firstname").setValue(name);
+                        // Check if this works
+                        current_user_db.child("phone").setValue(etCC.getText().toString().trim()+etPhone.getText().toString().trim());
+                        current_user_db.child("email").setValue(mAuth.getCurrentUser().getEmail());
                         current_user_db.child("image").setValue("default");
                         mProgress.dismiss();
                         SnapMap s = new SnapMap();

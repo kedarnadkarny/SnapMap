@@ -4,6 +4,7 @@ class Contacts {
     private String fullname;
     private String phone;
     private String locationaccess;
+    private String friendID;
 
     public String getFullname() {
         return fullname;
@@ -27,5 +28,13 @@ class Contacts {
 
     public void setLocationaccess(String locationaccess) {
         this.locationaccess = locationaccess;
+    }
+
+    public String getFriendID() {
+        return friendID;
+    }
+
+    public void setFriendID(String friendID) {
+        this.friendID = friendID;
     }
 }

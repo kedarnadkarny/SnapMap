@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +24,7 @@ public class MyProfileActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
 
-    EditText etFirstName, etLastName, etCountry, etState, etCity;
+    EditText etFirstName, etLastName, etCountry, etState, etCity, etCC, etPhone;
     String gender = "";
     Button btnUpdate;
     private ProgressDialog mProgress;
@@ -44,6 +45,8 @@ public class MyProfileActivity extends AppCompatActivity {
         etCity = (EditText) findViewById(R.id.etCity);
         rFemale = (RadioButton) findViewById(R.id.radio_female);
         rMale = (RadioButton) findViewById(R.id.radio_male);
+        etCC = (EditText) findViewById(R.id.etCC);
+        etPhone = (EditText) findViewById(R.id.etPhone);
 
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +96,14 @@ public class MyProfileActivity extends AppCompatActivity {
                         rFemale.setChecked(true);
                     }
                 }
+                if(dataSnapshot.hasChild("phone")) {
+                    String cc = dataSnapshot.child("phone").getValue(String.class);
+                    String phone = dataSnapshot.child("phone").getValue(String.class);
+                    phone = phone.substring(Math.max(0, phone.length() - 10), phone.length());
+                    cc = cc.substring(0, 2);
+                    etCC.setText(cc);
+                    etPhone.setText(phone);
+                }
             }
 
             @Override
@@ -108,6 +119,7 @@ public class MyProfileActivity extends AppCompatActivity {
         String country = etCountry.getText().toString().trim();
         String state = etState.getText().toString().trim();
         String city = etCity.getText().toString().trim();
+        String phone = etCC.getText().toString().trim()+etPhone.getText().toString().trim();
         if(TextUtils.isEmpty(fname) && TextUtils.isEmpty(lname) && TextUtils.isEmpty(country) && TextUtils.isEmpty(state) && TextUtils.isEmpty(city) && TextUtils.isEmpty(gender)) {
             Toast.makeText(MyProfileActivity.this, "Enter missing fields!", Toast.LENGTH_SHORT).show();
         }
@@ -120,6 +132,7 @@ public class MyProfileActivity extends AppCompatActivity {
             current_user_db.child("country").setValue(country);
             current_user_db.child("state").setValue(state);
             current_user_db.child("city").setValue(city);
+            current_user_db.child("phone").setValue(phone);
             mProgress.dismiss();
             Toast.makeText(MyProfileActivity.this, "Profile Updated!", Toast.LENGTH_SHORT).show();
         }

@@ -120,7 +120,8 @@
         android:layout_below="@+id/etCountry"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="21dp">
+        android:layout_marginTop="21dp"
+        android:id="@+id/radioGroup">
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -148,5 +149,26 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/textView9"
         android:layout_alignEnd="@+id/textView9" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/etCC"
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/textView11"
+        android:layout_alignEnd="@+id/textView11" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:id="@+id/etPhone"
+        android:layout_alignBottom="@+id/etCC"
+        android:layout_toRightOf="@+id/etCountry"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

@@ -68,7 +68,9 @@
         android:text="REGISTER"
         android:id="@+id/btnRegister"
         android:layout_below="@+id/etPassword"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/btnLogin"
+        android:layout_alignStart="@+id/btnLogin"
+        android:layout_marginTop="60dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -86,4 +88,36 @@
         android:id="@+id/textView5"
         android:layout_above="@+id/btnLogin"
         android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="PHONE"
+        android:id="@+id/textView4"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:id="@+id/etPhone"
+        android:layout_below="@+id/textView4"
+        android:layout_alignRight="@+id/etPassword"
+        android:layout_alignEnd="@+id/etPassword"
+        android:layout_toRightOf="@+id/etCC"
+        android:layout_toEndOf="@+id/etCC"
+        android:hint="XXXXXXXXXX" />
+
+    <EditText
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/etCC"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="CC" />
+
 </RelativeLayout>
