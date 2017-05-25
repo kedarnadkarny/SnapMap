@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "214445509818",
+    "firebase_url": "https://snapmap-99d18.firebaseio.com",
+    "project_id": "snapmap-99d18",
+    "storage_bucket": "snapmap-99d18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:214445509818:android:13b1d57db9d43a33",
+        "android_client_info": {
+          "package_name": "com.map.snap.snapmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "214445509818-0jfdpmi6bf50tud21nr6s3e3qj8pu2cb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.map.snap.snapmap",
+            "certificate_hash": "4563d62ef7b2ffc1bdbdb194cafd65bd9cd1b5e9"
+          }
+        },
+        {
+          "client_id": "214445509818-p9o4hv65tqn0jbo8cudah1mmiv3q3455.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCtz9UDYfQ3Oq0d7T5vvuDfKAYDSFYvzI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "214445509818-p9o4hv65tqn0jbo8cudah1mmiv3q3455.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
